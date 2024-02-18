@@ -120,7 +120,7 @@ defmodule ExOauth2Provider.AccessTokens do
 
     queryable
     |> where([a], is_nil(a.revoked_at))
-    |> where([a], is_nil(a.expires_in) or datetime_add(a.inserted_at, a.expires_in, "second") > ^now)
+    |> where([a], is_nil(a.expires_in) or datetime_add(a.inserted_at, a.expires_in, "second") > datetime_add(^now, 5, "minute"))
     |> order_by([a], desc: a.inserted_at, desc: :id)
     |> Config.repo(config).all()
     |> Enum.filter(&is_accessible?/1)
