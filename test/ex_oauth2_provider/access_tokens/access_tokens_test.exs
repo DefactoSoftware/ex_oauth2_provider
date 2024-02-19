@@ -116,20 +116,6 @@ defmodule ExOauth2Provider.AccessTokensTest do
     end
   end
 
-  describe "get_application_token_for/3" do
-    test "fetches", %{application: application} do
-      {:ok, access_token1} = AccessTokens.create_application_token(application, %{}, otp_app: :ex_oauth2_provider)
-      inserted_at = QueryHelpers.timestamp(OauthAccessToken, :inserted_at, seconds: -1)
-      QueryHelpers.change!(access_token1, inserted_at: inserted_at)
-      {:ok, access_token2} = AccessTokens.create_application_token(application, %{}, otp_app: :ex_oauth2_provider)
-
-      assert %OauthAccessToken{id: id} = AccessTokens.get_application_token_for(application, nil, otp_app: :ex_oauth2_provider)
-      assert id == access_token2.id
-
-      refute AccessTokens.get_application_token_for(Fixtures.application(uid: "application-2"), nil, otp_app: :ex_oauth2_provider)
-    end
-  end
-
   test "get_authorized_tokens_for/2", %{user: user, application: application} do
     {:ok, access_token} = AccessTokens.create_token(user, %{application: application}, otp_app: :ex_oauth2_provider)
 

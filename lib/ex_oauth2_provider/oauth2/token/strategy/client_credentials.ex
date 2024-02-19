@@ -38,13 +38,7 @@ defmodule ExOauth2Provider.Token.ClientCredentials do
       scopes: scopes
     }
 
-    application
-    |> AccessTokens.get_application_token_for(scopes, config)
-    |> case do
-      nil          -> AccessTokens.create_application_token(application, token_params, config)
-      access_token -> {:ok, access_token}
-    end
-    |> case do
+    case AccessTokens.create_application_token(application, token_params, config) do
       {:ok, access_token} -> {:ok, Map.merge(params, %{access_token: access_token})}
       {:error, error}     -> Error.add_error({:ok, params}, error)
     end

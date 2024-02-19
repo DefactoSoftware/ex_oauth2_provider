@@ -90,26 +90,6 @@ defmodule ExOauth2Provider.AccessTokens do
     |> load_matching_token_for(application, scopes, config)
   end
 
-  @doc """
-  Gets the most recent, acccessible, matching access token for an application.
-
-  ## Examples
-
-      iex> get_application_token_for(application, "read write", otp_app: :my_app)
-      %OauthAccessToken{}
-
-      iex> get_application_token_for(application, "read invalid", otp_app: :my_app)
-      nil
-  """
-  @spec get_application_token_for(Application.t(), binary(), keyword()) :: AccessToken.t() | nil
-  def get_application_token_for(application, scopes, config \\ []) do
-    config
-    |> Config.access_token()
-    |> scope_belongs_to(:resource_owner_id, nil)
-    |> scope_belongs_to(:application_id, application)
-    |> load_matching_token_for(application, scopes, config)
-  end
-
   defp load_matching_token_for(queryable, application, scopes, config) do
     now =
       config
